@@ -1,6 +1,6 @@
+import scrapy
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.selector import Selector
-from scrapy import http
 from scrapy.shell import inspect_response  # for debugging
 import re
 import json
@@ -36,7 +36,7 @@ class TweetScraper(CrawlSpider):
 
     def start_requests(self):
         url = self.url % (quote(self.query), '')
-        yield http.Request(url, callback=self.parse_page)
+        yield scrapy.Request(url, self.parse_page)
 
     def parse_page(self, response):
         # inspect_response(response, self)
@@ -49,7 +49,7 @@ class TweetScraper(CrawlSpider):
         min_position = data['min_position']
         min_position = min_position.replace("+","%2B")
         url = self.url % (quote(self.query), min_position)
-        yield http.Request(url, callback=self.parse_page)
+        yield scrapy.Request(url, self.parse_page)
 
     def parse_tweets_block(self, html_page):
         page = Selector(text=html_page)
