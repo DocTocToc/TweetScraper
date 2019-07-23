@@ -80,6 +80,13 @@ class TweetScraper(CrawlSpider):
                     # If there is not text, we ignore the tweet
                     continue
 
+                ### get url links
+                tweet['links'] = item.xpath('.//div[@class="js-tweet-text-container"]/p//a[contains(@class, "twitter-timeline-link")]/@data-expanded-url').extract()
+                if tweet['links']:
+                    tweet['has_links'] = True
+                else:
+                    tweet['has_links'] = False
+
                 ### get meta data
                 tweet['url'] = item.xpath('.//@data-permalink-path').extract()[0]
 
